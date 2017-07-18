@@ -60,8 +60,9 @@ class ViewController: UIViewController {
         
         if (contactDB.open()) {
             
-            let insertSQL = "INSERT INTO CONTACTS (name, address, phone) VALUES ('\(name.text!)', '\(address.text!)', '\(phoneNo.text!)')"
             
+            let insertSQL = "INSERT INTO CONTACTS (name, address, phone) VALUES ('\(name.text!)', '\(address.text!)', '\(phoneNo.text!)')"
+            //also used for delete,update
             let result = contactDB.executeUpdate(insertSQL,
                                                   withArgumentsIn: [])
             
@@ -104,6 +105,64 @@ class ViewController: UIViewController {
         }
         
     }
+    
+    
+    @IBAction func update(_ sender: UIButton) {
+        
+        //optionals in swift
+        //var ds:String? = "ssds"
+       
+        let contactDB = FMDatabase(path: databasePath as String)
+        
+        if (contactDB.open()) {
+            
+            
+            let updateSQL = "UPDATE CONTACTS SET name = 'sohail', address = 'gulshan' WHERE phone = '\(phoneNo.text!)'"
+            //also used for update
+            let result = contactDB.executeUpdate(updateSQL,
+                                                 withArgumentsIn: [])
+            
+            if !result {
+                status.text = "Failed to update contact"
+                print("Error: \(contactDB.lastErrorMessage())")
+            } else {
+                status.text = "Contact updated"
+                name.text = ""
+                address.text = ""
+                phoneNo.text = ""
+            }
+        } else {
+            print("Error: \(contactDB.lastErrorMessage())")
+        }
+    }
+    
+    
+    
+    @IBAction func delBtn(_ sender: UIButton) {
+        let contactDB = FMDatabase(path: databasePath as String)
+        
+        if (contactDB.open()) {
+            
+            
+            let updateSQL = "DELETE FROM CONTACTS WHERE name = '\(name.text!)'"
+            //also used for delete
+            let result = contactDB.executeUpdate(updateSQL,
+                                                 withArgumentsIn: [])
+            
+            if !result {
+                status.text = "Failed to delete contact"
+                print("Error: \(contactDB.lastErrorMessage())")
+            } else {
+                status.text = "Contact deleted"
+                name.text = ""
+                address.text = ""
+                phoneNo.text = ""
+            }
+        } else {
+            print("Error: \(contactDB.lastErrorMessage())")
+        }
+    }
+
     
 
 }
